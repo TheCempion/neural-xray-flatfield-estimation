@@ -1,0 +1,41 @@
+{
+    "arch": {
+        "type": "UNet",
+        "args": {
+            "encoder_type": 16,
+            "pretrained": false,
+            "model_weights": "/path/to/model_weights/model_best.pth",
+            "input_channels": 2,
+            "kernel_size": 3,
+            "norm_layer": "instance",
+            "f_act_output": "ReLU"
+        }
+    },
+    "dataset": {
+        "type": "HDF5InferenceDataset",
+        "args": {
+            "filename": "/path/to/hdf5-dataset/test_dataset.hdf5",
+            "dataset_name_inputs": "hologram_subset",
+            "dataset_name_conditions": "condition",
+            "hdf5_group_names": [
+                "images"
+            ],
+            "fixed_condition_idx": 6,
+            "use_subset": false
+        }
+    },
+    "data_loader": {
+        "type": "HDF5DataLoader",
+        "args": {
+            "batch_size": 4
+        }
+    },
+    "evalutation": {
+        "type": "RealDataEvaluator",
+        "basepath": "/path/to/output/directory/plots/",
+        "pca_file": "/path/to/pca/file/used/as/reference/pca.pkl",
+        "override_hdf5": true,
+        "override_stats": true,
+        "override_plots": true
+    }
+}

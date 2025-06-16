@@ -1,0 +1,14 @@
+*
+!.gitignore
+!.gitkeep
+
+!*/
+!*.py
+!requirements.txt
+
+!logger/*.json
+!example*.json
+!readme.*
+
+.venv
+__pycache__/

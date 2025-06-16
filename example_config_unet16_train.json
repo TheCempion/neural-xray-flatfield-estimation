@@ -1,0 +1,104 @@
+{
+    "arch": {
+        "type": "UNet",
+        "args": {
+            "encoder_type": 16,
+            "pretrained": false,
+            "model_weights": null,
+            "input_channels": 2,
+            "kernel_size": 3,
+            "norm_layer": "instance",
+            "f_act_output": "ReLU"
+        }
+    },
+    "dataset": {
+        "type": "HDF5TrainDataset",
+        "args": {
+            "filename": "/path/to/hdf5-dataset/train_dataset.hdf5",
+            "dataset_name_inputs": "hologram",
+            "dataset_name_labels": "flatfield",
+            "dataset_name_conditions": "condition",
+            "hdf5_group_names": [
+                "images",
+                "normalized",
+                "bymax",
+                "cropped"
+            ],
+            "input_size": null,
+            "resize_method": null,
+            "num_conditions": 1
+        }
+    },
+    "data_loader": {
+        "type": "HDF5DataLoader",
+        "args": {
+            "batch_size": 16,
+            "batch_size_valid": 2,
+            "validation_split": 0.0
+        }
+    },
+    "valid_data_loader_dataset_args": {
+        "batch_size": 4,
+        "dataset_size": 256,
+        "hdf5_group_names": [
+            "images",
+            "normalized",
+            "bymax"
+        ]
+    },
+    "data_normalizer": null,
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "lr": 1e-4,
+            "betas": [
+                0.9,
+                0.999
+            ],
+            "weight_decay": 1e-6
+        }
+    },
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "step_size": 2000,
+            "gamma": 0.5
+        }
+    },
+    "loss": {
+        "type": "EpochBasedComposedLoss",
+        "args": {
+            "losses": {
+                "DiracLoss": {
+                    "lambda_l2": 1.0,
+                    "lambda_var": 0.1,
+                    "mode": "sub",
+                    "patch_mode": null
+                },
+                "MS_DSSIM_Loss": {
+                    "lam": 0.01
+                }
+            }
+        }
+    },
+    "trainer": {
+        "epochs": 40,
+        "save_period": 1,
+        "early_stop": 30,
+        "verbosity": 2,
+        "tensorboard": false,
+        "accum_batches": 16,
+        "store_last_model": true,
+        "what_to_plot": [
+            "F",
+            "H",
+            "I",
+            "J"
+        ],
+        "loss_tracker_args": {
+            "ymax": 0.5,
+            "plot_other_losses": true,
+            "smoothing": 0.2
+        }
+    }
+}
